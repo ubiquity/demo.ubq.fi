@@ -33,6 +33,7 @@
     "@octokit/core": "^5.1.0",
     "@octokit/plugin-create-or-update-text-file": "^4.0.1",
     "@octokit/rest": "^20.0.2",
+    "@openzeppelin/contracts": "^5.4.0",
     "@supabase/supabase-js": "2.39.7",
     "@types/libsodium-wrappers": "^0.7.13",
     "@uniswap/permit2-sdk": "^1.2.0",

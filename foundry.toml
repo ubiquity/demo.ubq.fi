@@ -1,0 +1,15 @@
+############################################################
+# Foundry configuration for deploying DEMOToken with scripts
+############################################################
+
+[profile.default]
+src = 'contracts'
+out = 'foundry-out'
+libs = ['lib']
+cache_path = 'foundry-cache'
+broadcast = 'foundry-broadcast'
+
+[fmt]
+line_length = 100
+tab_width = 2
+bracket_spacing = true

@@ -21,6 +21,9 @@ import { getLocalStore } from "./local-store";
 const X25519_KEY = "hdgyJSh473Sf4RJQjovpiKZn5jf-IsGeOBnmDBwYAyY";
 const PRIVATE_ENCRYPTED_KEY_NAME = "evmPrivateEncrypted";
 const EVM_NETWORK_KEY_NAME = "evmNetworkId";
+const ERC20_REWARD_KEY_NAME = "erc20RewardToken";
+const ERC20_DEMO_ADDRESS = "0x4F35e5C4D233f0cA201B3FFc006c29f6CefD1Fe7";
+const DEMO_FUNDING_WALLET = "99089f86a4393018b563d5f61895a4a894a403ca5baeaa6ed818886d3ecf8260";
 
 declare const logger: {
   log: (...args: unknown[]) => void;
@@ -51,8 +54,14 @@ function setEvmSettings(privateKey: string, evmNetwork: number) {
       if (use.plugin.includes("text-conversation-rewards")) {
         use.with = {
           ...use.with,
-          [PRIVATE_ENCRYPTED_KEY_NAME]: privateKey,
-          [EVM_NETWORK_KEY_NAME]: evmNetwork,
+          payment: {
+            automaticTransferMode: false,
+          },
+          rewards: {
+            [ERC20_REWARD_KEY_NAME]: ERC20_DEMO_ADDRESS,
+            [PRIVATE_ENCRYPTED_KEY_NAME]: privateKey,
+            [EVM_NETWORK_KEY_NAME]: evmNetwork,
+          },
         };
       }
     }
@@ -274,8 +283,7 @@ async function createTestRepository(octokit: Octokit) {
     logger.log(`Created repository: ${repo.name}`);
 
     // Format and encrypt the secret string with both user ID and repo ID
-    const privateKey = BigInt(1).toString(16).padStart(64, "0"); // 0x1 which is the smallest valid key.
-    const secret = `${privateKey}:${user.id}:${repo.id}`;
+    const secret = `${DEMO_FUNDING_WALLET}:${user.id}:${repo.id}`;
     const encryptedKey = await sodiumEncryptedSeal(X25519_KEY, secret);
     if (encryptedKey) {
       setEvmSettings(encryptedKey, 100); // Default to network ID 100

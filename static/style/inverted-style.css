@@ -36,10 +36,13 @@
     --background-color-light: hsl(225 50% var(--background-color-light-brightness) / 1);
     --border-color: hsl(225 25% var(--border-brightness) / 1);
   }
+  svg.logo path {
+    fill: #000000;
+  }
   svg.logo {
     height: 28px;
     width: 24.469px;
-    margin-right: 6px;
+    margin-right: 3px;
     object-fit: contain;
     vertical-align: middle;
     fill: #000000;

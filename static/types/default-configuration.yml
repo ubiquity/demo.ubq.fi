@@ -1,5 +1,5 @@
 plugins:
-  ubiquity-os-marketplace/command-start-stop@demo:
+  ubiquity-os-marketplace/command-start-stop@fix/demo:
     skipBotEvents: false
   ubiquity-os/command-demo@demo:
   ubiquity-os-marketplace/command-wallet@demo:

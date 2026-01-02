@@ -1,43 +1,31 @@
 plugins:
-  - uses:
-      - plugin: https://command-start-stop-demo.deno.dev
-        skipBotEvents: false
-  - uses:
-      - plugin: https://command-demo-demo.deno.dev
-  - uses:
-      - plugin: https://command-wallet-demo.deno.dev
-  - uses:
-      - plugin: ubiquity-os-marketplace/command-ask@v1.2.0
-        with:
-          model: deepseek/deepseek-r1-0528:free
-          openAiBaseUrl: https://openrouter.ai/api/v1
-  - uses:
-      - plugin: https://command-query-demo.deno.dev
-  - uses:
-      - plugin: ubiquity-os-marketplace/text-conversation-rewards@v1.7.6
-        skipBotEvents: false
-        with:
-          incentives:
-            collaboratorOnlyPaymentInvocation: false
-            contentEvaluator:
-              openAi:
-                endpoint: "https://openrouter.ai/api/v1"
-                model: "deepseek/deepseek-chat-v3-0324:free"
-            userExtractor: {}
-            dataPurge: {}
-            formattingEvaluator: {}
-            payment: {}
-            githubComment: {}
-            reviewIncentivizer: {}
-            simplificationIncentivizer: {}
-            externalContent:
-              llmImageModel:
-                model: meta-llama/llama-4-maverick:free
-              llmWebsiteModel:
-                model: deepseek/deepseek-chat-v3-0324:free
-  - uses:
-      - plugin: ubiquity-os-marketplace/daemon-disqualifier@v1.0.2
-  - uses:
-      - plugin: ubiquity-os-marketplace/text-vector-embeddings@v1.1.0
-        with:
-          demoFlag: true
+  ubiquity-os-marketplace/command-start-stop@demo:
+    skipBotEvents: false
+  ubiquity-os/command-demo@demo:
+  ubiquity-os-marketplace/command-wallet@demo:
+  ubiquity-os-marketplace/command-query@demo:
+  ubiquity-os-marketplace/text-conversation-rewards@v1.7.6:
+    skipBotEvents: false
+    with:
+      incentives:
+        collaboratorOnlyPaymentInvocation: false
+        contentEvaluator:
+          openAi:
+            endpoint: "https://openrouter.ai/api/v1"
+            model: "deepseek/deepseek-chat-v3-0324:free"
+        userExtractor: {}
+        dataPurge: {}
+        formattingEvaluator: {}
+        payment: {}
+        githubComment: {}
+        reviewIncentivizer: {}
+        simplificationIncentivizer: {}
+        externalContent:
+          llmImageModel:
+            model: meta-llama/llama-4-maverick:free
+          llmWebsiteModel:
+            model: deepseek/deepseek-chat-v3-0324:free
+  ubiquity-os-marketplace/daemon-disqualifier@v1.0.2:
+  ubiquity-os-marketplace/text-vector-embeddings@v1.1.0:
+    with:
+      demoFlag: true

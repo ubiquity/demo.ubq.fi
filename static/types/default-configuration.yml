@@ -11,8 +11,8 @@ plugins:
         collaboratorOnlyPaymentInvocation: false
         contentEvaluator:
           openAi:
-            endpoint: "https://openrouter.ai/api/v1"
-            model: "deepseek/deepseek-chat-v3-0324:free"
+            endpoint: https://openrouter.ai/api/v1
+            model: deepseek/deepseek-r1-0528:free
         userExtractor: {}
         dataPurge: {}
         formattingEvaluator: {}
@@ -24,7 +24,7 @@ plugins:
           llmImageModel:
             model: meta-llama/llama-4-maverick:free
           llmWebsiteModel:
-            model: deepseek/deepseek-chat-v3-0324:free
+            model: deepseek/deepseek-r1-0528:free
   ubiquity-os-marketplace/daemon-disqualifier@v1.0.3:
   ubiquity-os-marketplace/text-vector-embeddings@v1.1.1:
     with:

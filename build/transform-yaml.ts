@@ -19,7 +19,13 @@ async function main() {
     const details = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to read YAML file at: ${inputPath}\n${details}`);
   }
-  const parsed = YAML.parse(yamlText);
+  let parsed: unknown;
+  try {
+    parsed = YAML.parse(yamlText);
+  } catch (error: unknown) {
+    const details = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to parse YAML from ${inputPath}: ${details}`);
+  }
 
   if (parsed === null || typeof parsed !== "object") {
     throw new Error(`Unexpected YAML root type from ${inputPath}`);

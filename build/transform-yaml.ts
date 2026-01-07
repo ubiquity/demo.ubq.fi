@@ -30,6 +30,9 @@ async function main() {
   if (parsed === null || typeof parsed !== "object") {
     throw new Error(`Unexpected YAML root type from ${inputPath}`);
   }
+  if (!("plugins" in parsed) || typeof parsed.plugins !== "object" || parsed.plugins === null) {
+    throw new Error(`YAML file at ${inputPath} must contain a 'plugins' object`);
+  }
 
   const json = JSON.stringify(parsed, null, 2);
   const out = ["export const defaultConfiguration: { plugins: Record<string, unknown> } = ", json, ";\n", "export default defaultConfiguration;\n"].join("");

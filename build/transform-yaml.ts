@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Script to transform a YAML configuration file into a TypeScript module. Needed to include the default configuration in the browser build.
+ */
+
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

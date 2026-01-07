@@ -1,5 +1,4 @@
-//@ts-expect-error This is taken care of by es-build
-import defaultConf from "../../types/default-configuration.yml";
+import defaultConf from "../../types/default-configuration";
 import { getSessionToken, gitHubLoginButtonHandler, setupDemoEnvironment } from "./auth-context";
 
 function initializeAuth() {

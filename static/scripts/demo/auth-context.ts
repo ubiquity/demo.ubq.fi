@@ -13,8 +13,7 @@ import { Octokit } from "@octokit/rest";
 import { createClient } from "@supabase/supabase-js";
 import _sodium from "libsodium-wrappers";
 import YAML from "yaml";
-//@ts-expect-error This is taken care of by es-build
-import defaultConf from "../../types/default-configuration.yml";
+import defaultConf from "../../types/default-configuration";
 import { getLocalStore } from "./local-store";
 
 // Constants for encryption

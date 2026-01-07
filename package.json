@@ -10,8 +10,9 @@
     "bun": ">=1.0.0"
   },
   "scripts": {
-    "start": "bun build/esbuild-server.ts",
-    "build": "bun run build/transform-yaml.ts && bun build/esbuild-build.ts",
+    "start": "bun run generate && bun build/esbuild-server.ts",
+    "build": "bun run generate && bun build/esbuild-build.ts",
+    "generate": "bun run build/transform-yaml.ts",
     "format": "run-s format:lint format:prettier format:cspell",
     "format:lint": "eslint --fix .",
     "format:prettier": "prettier --write .",

@@ -12,7 +12,13 @@ async function main() {
   const inputPath = path.resolve(scriptDir, "../static/types/default-configuration.yml");
   const outputPath = path.resolve(scriptDir, "../static/types/default-configuration.ts");
 
-  const yamlText = await fs.readFile(inputPath, "utf8");
+  let yamlText: string;
+  try {
+    yamlText = await fs.readFile(inputPath, "utf8");
+  } catch (error: unknown) {
+    const details = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to read YAML file at: ${inputPath}\n${details}`);
+  }
   const parsed = YAML.parse(yamlText);
 
   if (parsed === null || typeof parsed !== "object") {

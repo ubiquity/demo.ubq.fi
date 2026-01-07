@@ -49,21 +49,19 @@ function stringifyYAML(value: Record<string, unknown>): string {
 
 function setEvmSettings(privateKey: string, evmNetwork: number) {
   // Find the text-conversation-rewards plugin
-  for (const plugin of defaultConf.plugins) {
-    for (const use of plugin.uses) {
-      if (use.plugin.includes("text-conversation-rewards")) {
-        use.with = {
-          ...use.with,
-          payment: {
-            automaticTransferMode: false,
-          },
-          rewards: {
-            [ERC20_REWARD_KEY_NAME]: ERC20_DEMO_ADDRESS,
-            [PRIVATE_ENCRYPTED_KEY_NAME]: privateKey,
-            [EVM_NETWORK_KEY_NAME]: evmNetwork,
-          },
-        };
-      }
+  for (const key of Object.keys(defaultConf.plugins)) {
+    if (key.includes("text-conversation-rewards")) {
+      defaultConf.plugins[key].with = {
+        ...defaultConf.plugins[key].with,
+        payment: {
+          automaticTransferMode: false,
+        },
+        rewards: {
+          [ERC20_REWARD_KEY_NAME]: ERC20_DEMO_ADDRESS,
+          [PRIVATE_ENCRYPTED_KEY_NAME]: privateKey,
+          [EVM_NETWORK_KEY_NAME]: evmNetwork,
+        },
+      };
     }
   }
 }

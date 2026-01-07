@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "bun build/esbuild-server.ts",
-    "build": "bun run build/transform-yaml.ts bun build/esbuild-build.ts",
+    "build": "bun run build/transform-yaml.ts && bun build/esbuild-build.ts",
     "format": "run-s format:lint format:prettier format:cspell",
     "format:lint": "eslint --fix .",
     "format:prettier": "prettier --write .",

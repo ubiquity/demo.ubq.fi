@@ -1,18 +1,13 @@
 plugins:
   ubiquity-os-marketplace/command-start-stop@demo:
-    skipBotEvents: false
   ubiquity-os/command-demo@demo:
   ubiquity-os-marketplace/command-wallet@demo:
   ubiquity-os-marketplace/command-query@demo:
-  ubiquity-os-marketplace/text-conversation-rewards@v1.7.9:
-    skipBotEvents: false
+  ubiquity-os-marketplace/text-conversation-rewards@demo:
     with:
       incentives:
         collaboratorOnlyPaymentInvocation: false
-        contentEvaluator:
-          openAi:
-            endpoint: https://openrouter.ai/api/v1
-            model: deepseek/deepseek-r1-0528:free
+        contentEvaluator: {}
         userExtractor: {}
         dataPurge: {}
         formattingEvaluator: {}
@@ -20,12 +15,8 @@ plugins:
         githubComment: {}
         reviewIncentivizer: {}
         simplificationIncentivizer: {}
-        externalContent:
-          llmImageModel:
-            model: meta-llama/llama-4-maverick:free
-          llmWebsiteModel:
-            model: deepseek/deepseek-r1-0528:free
-  ubiquity-os-marketplace/daemon-disqualifier@v1.0.3:
-  ubiquity-os-marketplace/text-vector-embeddings@v1.1.1:
+        externalContent: {}
+  ubiquity-os-marketplace/daemon-disqualifier@demo:
+  ubiquity-os-marketplace/text-vector-embeddings@demo:
     with:
       demoFlag: true

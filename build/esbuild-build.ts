@@ -4,14 +4,15 @@ import { config } from "dotenv";
 import esbuild from "esbuild";
 import yamlPluginModule from "esbuild-plugin-yaml";
 import { access, mkdir } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { invertColors } from "./plugins/invert-colors.ts";
 
 // Ensure output directory exists
 const outDir = join("static/dist");
 const { yamlPlugin } = yamlPluginModule;
-const libsodiumModulePath = fileURLToPath(import.meta.resolve("libsodium"));
+const require = createRequire(import.meta.url);
+const libsodiumModulePath = require.resolve("libsodium");
 // Deno's node_modules layout keeps the raw libsodium module in its own package.
 const resolveLibsodiumForDeno: esbuild.Plugin = {
   name: "resolve-libsodium-for-deno",

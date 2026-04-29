@@ -6,12 +6,6 @@
   },
   "deploy": {
     "org": "ubiquity-dao",
-    "install": "deno install",
-    "build": "deno task build",
-    "runtime": {
-      "type": "static",
-      "cwd": "./static",
-      "spa": true
-    }
+    "app": "p-demo-ubq-fi"
   }
 }

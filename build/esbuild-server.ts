@@ -1,5 +1,6 @@
 import esbuild from "esbuild";
-import { esBuildContext } from "./esbuild-build";
+import process from "node:process";
+import { esBuildContext } from "./esbuild-build.ts";
 
 (async () => {
   await server();

@@ -10,9 +10,9 @@
     "bun": ">=1.0.0"
   },
   "scripts": {
-    "start": "bun run generate && bun build/esbuild-server.ts",
-    "build": "bun run generate && bun build/esbuild-build.ts",
-    "generate": "bun run build/transform-yaml.ts",
+    "start": "deno task generate && deno run -A build/esbuild-server.ts",
+    "build": "deno task build",
+    "generate": "deno task generate",
     "format": "run-s format:lint format:prettier format:cspell",
     "format:lint": "eslint --fix .",
     "format:prettier": "prettier --write .",
@@ -41,6 +41,7 @@
     "dotenv": "^16.4.4",
     "esbuild-plugin-yaml": "^0.0.1",
     "ethers": "^5.7.2",
+    "libsodium": "^0.7.13",
     "libsodium-wrappers": "^0.7.13",
     "yaml": "^2.3.4"
   },
@@ -56,7 +57,7 @@
     "@typescript-eslint/parser": "^7.0.1",
     "adm-zip": "0.5.10",
     "cspell": "^8.4.0",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.0",
     "esbuild-yaml": "^1.3.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",

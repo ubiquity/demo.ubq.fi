@@ -5,10 +5,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import prettier from "prettier";
 import YAML from "yaml";
 
 function getScriptDir(): string {
-  return typeof import.meta.dir === "string" ? import.meta.dir : path.dirname(fileURLToPath(import.meta.url));
+  return path.dirname(fileURLToPath(import.meta.url));
 }
 
 async function main() {
@@ -39,9 +40,10 @@ async function main() {
   }
 
   const json = JSON.stringify(parsed, null, 2);
-  const out = ["export const defaultConfiguration: { plugins: Record<string, unknown> } = ", json, ";\n", "export default defaultConfiguration;\n"].join("");
+  const out = ["const defaultConfiguration: { plugins: Record<string, unknown> } = ", json, ";\n", "export default defaultConfiguration;\n"].join("");
+  const formatted = await prettier.format(out, { parser: "typescript", printWidth: 160, trailingComma: "es5" });
 
-  await fs.writeFile(outputPath, out, "utf8");
+  await fs.writeFile(outputPath, formatted, "utf8");
   process.stdout.write(`Generated ${outputPath}\n`);
 }
 

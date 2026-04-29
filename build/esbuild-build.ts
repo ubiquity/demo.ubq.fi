@@ -1,13 +1,28 @@
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
+import process from "node:process";
 import { config } from "dotenv";
 import esbuild from "esbuild";
-import { yamlPlugin } from "esbuild-plugin-yaml";
-import { access, mkdir } from "fs/promises";
-import { join } from "path";
-import { invertColors } from "./plugins/invert-colors";
+import yamlPluginModule from "esbuild-plugin-yaml";
+import { access, mkdir } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { invertColors } from "./plugins/invert-colors.ts";
 
 // Ensure output directory exists
 const outDir = join("static/dist");
+const { yamlPlugin } = yamlPluginModule;
+const libsodiumModulePath = fileURLToPath(import.meta.resolve("libsodium"));
+// Deno's node_modules layout keeps the raw libsodium module in its own package.
+const resolveLibsodiumForDeno: esbuild.Plugin = {
+  name: "resolve-libsodium-for-deno",
+  setup(build) {
+    build.onResolve({ filter: /^\.\/libsodium\.mjs$/ }, (args) => {
+      if (args.importer.endsWith("libsodium-wrappers.mjs")) {
+        return { path: libsodiumModulePath };
+      }
+    });
+  },
+};
 
 async function ensureOutDir() {
   try {
@@ -18,13 +33,13 @@ async function ensureOutDir() {
   }
 }
 
-import { pwaManifest } from "./plugins/pwa-manifest";
+import { pwaManifest } from "./plugins/pwa-manifest.ts";
 const typescriptEntries = ["static/scripts/logger.ts", "static/scripts/demo/demo.ts"];
 const cssEntries = ["static/style/style.css", "static/style/special.css"];
 export const entries = [...typescriptEntries, ...cssEntries];
 
 export const esBuildContext: esbuild.BuildOptions = {
-  plugins: [invertColors, pwaManifest, yamlPlugin({})],
+  plugins: [resolveLibsodiumForDeno, invertColors, pwaManifest, yamlPlugin({})],
   sourcemap: true,
   entryPoints: entries,
   bundle: true,

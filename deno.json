@@ -1,5 +1,7 @@
 {
   "tasks": {
+    "build": "deno task generate && deno run -A build/esbuild-build.ts",
+    "generate": "deno run -A build/transform-yaml.ts",
     "serve": "deno run --allow-read --allow-net --allow-env serve.ts"
   }
 }

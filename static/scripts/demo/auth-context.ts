@@ -150,6 +150,8 @@ const UI_CLASSES = {
 const ELEMENT_IDS = {
   install: "install",
   firstIssue: "first-issue",
+  googleLogin: "google-login",
+  telegramLogin: "telegram-login",
 } as const;
 
 /**
@@ -169,6 +171,90 @@ export async function gitHubLoginButtonHandler() {
   });
   if (error) {
     console.error("Error logging in:", error);
+  }
+}
+
+/**
+ * Handles Google login button click
+ * Initiates OAuth flow with Google for identity linking
+ */
+export async function googleLoginButtonHandler() {
+  logger.log("Initiating Google login...");
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.href,
+      scopes: "email profile",
+    },
+  });
+  if (error) {
+    console.error("Error logging in with Google:", error);
+  }
+}
+
+/**
+ * Handles Telegram login button click
+ * Uses Telegram WebApp initData for identity verification
+ */
+export async function telegramLoginButtonHandler() {
+  logger.log("Initiating Telegram login...");
+  // Telegram WebApp provides initData that can be used for authentication
+  const tg = (window as unknown as { Telegram?: { WebApp?: { initData: string; initDataUnsafe: { user?: unknown } } } }).Telegram;
+  if (!tg?.WebApp?.initData) {
+    console.error("Telegram WebApp not available");
+    logger.log("Telegram WebApp not available - please open in Telegram mini app");
+    return;
+  }
+
+  // Verify initData hash server-side would be ideal, but for demo we accept it client-side
+  const initData = tg.WebApp.initData;
+  const user = tg.WebApp.initDataUnsafe.user;
+
+  if (!initData) {
+    console.error("No initData from Telegram");
+    return;
+  }
+
+  logger.log(`Telegram user: ${JSON.stringify(user)}`);
+
+  // Store Telegram identity linked to GitHub identity (if logged in)
+  const sessionToken = getSessionToken();
+  if (sessionToken) {
+    await linkUserIdentity("telegram", user ? String((user as { id: number }).id) : initData.substring(0, 32));
+  } else {
+    logger.log("Please login with GitHub first to link Telegram identity");
+  }
+}
+
+/**
+ * Links additional identity provider to the current authenticated user
+ * This allows monitoring events from multiple platforms and knowing who invoked them
+ */
+async function linkUserIdentity(provider: string, providerUserId: string) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    logger.log("No authenticated user to link identity to");
+    return;
+  }
+
+  logger.log(`Linking ${provider} identity (${providerUserId}) to user ${user.id}`);
+
+  // Store identity link in Supabase
+  // Note: In production, you'd want server-side validation of the identity
+  const { error } = await supabase.from("user_identities").upsert({
+    user_id: user.id,
+    provider,
+    provider_user_id: providerUserId,
+    created_at: new Date().toISOString(),
+  }, {
+    onConflict: "user_id,provider",
+  });
+
+  if (error) {
+    console.error(`Error linking ${provider} identity:`, error);
+    logger.log(`Failed to link ${provider} identity`);
+  } else {
+    logger.log(`Successfully linked ${provider} identity`);
   }
 }
 

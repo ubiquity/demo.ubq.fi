@@ -657,8 +657,19 @@
   .filters-container input[type="text"].hidden {
     display: none;
   }
-  button#github-login-button {
+  button#github-login-button,
+  button#google-login-button,
+  button#telegram-login-button {
     margin-left: auto;
+  }
+  #google-login,
+  #telegram-login {
+    display: none;
+  }
+  .toolbar[data-authenticated="true"] #google-login,
+  .toolbar[data-authenticated="true"] #telegram-login {
+    display: block;
+    margin-left: 8px;
   }
   p.organization-name::after {
     content: "/";

@@ -1,13 +1,17 @@
 import defaultConf from "../../types/default-configuration";
-import { getSessionToken, gitHubLoginButtonHandler, setupDemoEnvironment } from "./auth-context";
+import { getSessionToken, gitHubLoginButtonHandler, googleLoginButtonHandler, telegramLoginButtonHandler, setupDemoEnvironment } from "./auth-context";
 
 function initializeAuth() {
   const token = getSessionToken();
   const loginButton = document.getElementById("github-login") as HTMLDivElement;
   const gitHubLoginButton = document.getElementById("github-login-button") as HTMLButtonElement;
+  const googleLoginButton = document.getElementById("google-login-button") as HTMLButtonElement;
+  const telegramLoginButton = document.getElementById("telegram-login-button") as HTMLButtonElement;
 
-  // Add click handler to the button
+  // Add click handlers to the buttons
   gitHubLoginButton.addEventListener("click", gitHubLoginButtonHandler);
+  googleLoginButton.addEventListener("click", googleLoginButtonHandler);
+  telegramLoginButton.addEventListener("click", telegramLoginButtonHandler);
 
   // Show login button if not authenticated
   if (!token) {

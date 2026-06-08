@@ -15,6 +15,12 @@ import _sodium from "libsodium-wrappers";
 import YAML from "yaml";
 import defaultConf from "../../types/default-configuration";
 import { getLocalStore } from "./local-store";
+import {
+  linkIdentity,
+  getTelegramUser,
+  isTelegramWebApp,
+  type LinkedIdentity,
+} from "./identity-service";
 
 // Constants for encryption
 const X25519_KEY = "hdgyJSh473Sf4RJQjovpiKZn5jf-IsGeOBnmDBwYAyY";
@@ -170,6 +176,63 @@ export async function gitHubLoginButtonHandler() {
   if (error) {
     console.error("Error logging in:", error);
   }
+}
+
+/**
+ * Handles Google login/link button click
+ * Initiates OAuth flow with Google to link Google Drive
+ */
+export async function googleLoginButtonHandler() {
+  logger.log("Initiating Google login...");
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.href,
+    },
+  });
+  if (error) {
+    console.error("Error logging in with Google:", error);
+  }
+}
+
+/**
+ * Links the current Telegram WebApp identity to the authenticated user.
+ *
+ * Extracts user data from Telegram.WebApp runtime (if available) and
+ * stores it as a linked identity in the `user_identities` table.
+ *
+ * @returns The linked identity record, or null if linking failed
+ */
+export async function linkTelegramIdentity(): Promise<LinkedIdentity | null> {
+  const telegramUser = getTelegramUser();
+  if (!telegramUser) {
+    console.warn("Not running in Telegram WebView — cannot link Telegram identity");
+    return null;
+  }
+
+  logger.log("Linking Telegram identity...");
+  return await linkIdentity("telegram", String(telegramUser.id), {
+    first_name: telegramUser.first_name,
+    last_name: telegramUser.last_name ?? "",
+    username: telegramUser.username ?? "",
+    language_code: telegramUser.language_code ?? "",
+  });
+}
+
+/**
+ * Checks if a Telegram WebView is available and returns the user info.
+ *
+ * @returns Telegram user data or null
+ */
+export function getTelegramUserData() {
+  return getTelegramUser();
+}
+
+/**
+ * Returns whether the app is running inside Telegram.
+ */
+export function checkIsTelegramWebApp(): boolean {
+  return isTelegramWebApp();
 }
 
 /**

@@ -1037,4 +1037,43 @@
     position: absolute;
     width: 100%;
   }
+
+  /* Identity linking buttons (Google, Telegram) */
+  .identity-link {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease-in-out;
+    position: absolute;
+    width: 100%;
+    display: none;
+  }
+  .identity-link.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #google-link {
+    transform: translateY(calc(100% + 4px));
+  }
+  #telegram-link {
+    transform: translateY(calc(200% + 8px));
+  }
+
+  /* Linked identities display in the toolbar */
+  .linked-identities {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 16px;
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  .linked-identities .linked-label {
+    white-space: nowrap;
+  }
+  .linked-identities .linked-providers {
+    font-weight: 600;
+  }
+  .toolbar[data-authenticated="true"] .linked-identities {
+    display: flex !important;
+  }
 }

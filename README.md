@@ -45,3 +45,10 @@ The demo showcases:
 - Automated task pricing
 - Real-time collaboration
 - Smart contract integration
+
+## Hosting (2026-10-12)
+
+Served by the Cloudflare Workers static-assets worker `demo-ubq-fi`
+(`wrangler.toml`), routed at `demo.ubq.fi/*`. The build needs the shared
+Supabase values (`SUPABASE_URL`, `SUPABASE_ANON_KEY` ).
+Deno Deploy is no longer used (shutdown April 2027).

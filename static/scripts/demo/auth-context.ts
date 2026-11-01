@@ -14,7 +14,7 @@ import { createClient } from "@supabase/supabase-js";
 import _sodium from "libsodium-wrappers";
 import YAML from "yaml";
 import defaultConf from "../../types/default-configuration";
-import { getLocalStore } from "./local-store";
+import { getGitHubToken } from "./github-session";
 
 // Constants for encryption
 const X25519_KEY = "hdgyJSh473Sf4RJQjovpiKZn5jf-IsGeOBnmDBwYAyY";
@@ -68,7 +68,7 @@ function setEvmSettings(privateKey: string, evmNetwork: number) {
 declare const SUPABASE_URL: string;
 declare const SUPABASE_ANON_KEY: string;
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const mainView = document.getElementsByTagName("main")[0];
 
 export interface OAuthToken {
@@ -158,10 +158,13 @@ const ELEMENT_IDS = {
  */
 export async function gitHubLoginButtonHandler() {
   logger.log("Initiating GitHub login...");
+  const redirect = new URL(window.location.href);
+  redirect.hash = "";
+  redirect.searchParams.set("auth_provider", "github");
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "github",
     options: {
-      redirectTo: window.location.href,
+      redirectTo: redirect.href,
       // Request minimum required scope:
       // - public_repo to create public repositories
       scopes: "public_repo",
@@ -172,32 +175,18 @@ export async function gitHubLoginButtonHandler() {
   }
 }
 
-/**
- * Gets session token from either:
- * 1. URL hash after OAuth redirect
- * 2. Cached session in local storage
- */
-export function getSessionToken() {
-  // cSpell: ignore wfzpewmlyiozupulbuur
-  const cachedSessionToken = getLocalStore<OAuthToken>("sb-wfzpewmlyiozupulbuur-auth-token");
-  if (cachedSessionToken) {
-    return cachedSessionToken.provider_token;
-  }
-  const newSessionToken = getNewSessionToken();
-  if (newSessionToken) {
-    return newSessionToken;
-  }
-  return null;
-}
+/** Wait for Supabase to process OAuth before selecting a GitHub-specific token. */
+export async function getSessionToken() {
+  const callbackUrl = new URL(window.location.href);
+  const { data: { session }, error } = await supabase.auth.getSession();
+  if (error) throw error;
 
-function getNewSessionToken() {
-  const hash = window.location.hash;
-  const params = new URLSearchParams(hash.substring(1)); // remove the '#' and parse
-  const providerToken = params.get("provider_token");
-  if (!providerToken) {
-    return null;
-  }
-  return providerToken;
+  const token = getGitHubToken(session, callbackUrl, sessionStorage);
+  // Use the current URL: Supabase may already have removed the sensitive OAuth hash.
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.searchParams.delete("auth_provider");
+  window.history.replaceState(null, "", cleanUrl.href);
+  return token;
 }
 
 /**

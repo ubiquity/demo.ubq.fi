@@ -1,13 +1,16 @@
 import defaultConf from "../../types/default-configuration";
 import { getSessionToken, gitHubLoginButtonHandler, setupDemoEnvironment } from "./auth-context";
+import { initializeUnifiedAuth } from "./unified-auth";
 
-function initializeAuth() {
-  const token = getSessionToken();
+async function initializeAuth() {
+  const token = await getSessionToken();
   const loginButton = document.getElementById("github-login") as HTMLDivElement;
   const gitHubLoginButton = document.getElementById("github-login-button") as HTMLButtonElement;
 
   // Add click handler to the button
   gitHubLoginButton.addEventListener("click", gitHubLoginButtonHandler);
+
+  await initializeUnifiedAuth().catch(console.error);
 
   // Show login button if not authenticated
   if (!token) {
@@ -21,7 +24,7 @@ function initializeAuth() {
 async function init() {
   if (defaultConf !== undefined) {
     try {
-      initializeAuth();
+      await initializeAuth();
     } catch (error) {
       console.error(error);
     }

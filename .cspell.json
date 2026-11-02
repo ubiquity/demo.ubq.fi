@@ -5,6 +5,7 @@
   "useGitignore": true,
   "language": "en",
   "words": [
+    "apikey",
     "binkey",
     "binsec",
     "chainlist",
@@ -26,6 +27,8 @@
     "Numberish",
     "outbase",
     "outdir",
+    "plpgsql",
+    "reauthentication",
     "Rpcs",
     "scalarmult",
     "servedir",
